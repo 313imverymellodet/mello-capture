@@ -4,14 +4,16 @@ Branded landing page for the **Weekend-Ship Playbook** lead magnet, built on the
 
 ## Files
 - `index.html` — the page (self-contained: fonts from Google, everything else inline).
-- `api/subscribe.js` — Vercel serverless function that adds the email to beehiiv (keeps your API key server-side).
+- `api/subscribe.js` — Vercel serverless function that (1) adds the email to a **Resend Audience** and (2) sends the branded welcome email with the Playbook link. Keeps your API key server-side.
 
 ## Deploy (Vercel — matches your stack)
 1. Drop this folder into a new Vercel project (or `vercel` from the CLI).
-2. Add two Environment Variables in Vercel → Settings:
-   - `BEEHIIV_API_KEY` — your beehiiv API key
-   - `BEEHIIV_PUBLICATION_ID` — the publication id (looks like `pub_xxxx`)
-3. In beehiiv, set the **welcome email / automation** to deliver the Playbook PDF — the function sends `send_welcome_email: true`, so beehiiv handles delivery.
+2. Add these Environment Variables in Vercel → Settings:
+   - `RESEND_API_KEY` — your Resend API key (`re_...`)
+   - `RESEND_AUDIENCE_ID` — the audience/list id (Resend → Audiences)
+   - `RESEND_FROM` — e.g. `Mello <mello@learnwithmello.com>` (domain must be verified in Resend)
+   - `PLAYBOOK_URL` — public link to the Weekend-Ship Playbook PDF
+3. The welcome email is sent by the function itself (no automation to configure). New subscribers land in your Resend Audience; send the newsletter later via **Resend Broadcasts**.
 4. Point your bio link (threads.com/@romellotcp) at the deployed URL.
 
 ## Test / demo mode
