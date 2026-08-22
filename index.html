@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Weekend-Ship Playbook — Mello</title>
+<meta name="description" content="Free playbook: how I ship an app in a weekend around a full-time job. From Romello 'Mello' Morris."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+/*═══ ROOT + THEME (from mello-brand-system-v5) ═══*/
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0C0C0B; --b2:#131312; --b3:#1C1C1A; --b4:#282826; --b5:#363633; --b6:#484845;
+  --iv:#F5F0E8; --iv2:#C8C0B0; --iv3:#7A7468;
+  --red:#C42B2B; --red2:#E03030; --red-lo:rgba(196,43,43,.10);
+  --warm:#D4985A; --warm2:#F0B870;
+  --pt:#4A7FA5; --pm:#C4875A; --pl:#5C7A5A; --pp:#C42B2B;
+  --fa:'Anton',sans-serif; --fh:'Bebas Neue',sans-serif; --fe:'DM Serif Display',serif;
+  --fb:'Inter',sans-serif; --fm:'IBM Plex Mono',monospace;
+  --spring:cubic-bezier(0.16,1,0.3,1); --snappy:cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="light"]{
+  --bg:#F5F0E8; --b2:#EDE8DF; --b3:#E5DDD0; --b4:#D5CDBF; --b5:#C0B8A8; --b6:#A89E8C;
+  --iv:#1A1714; --iv2:#3A3530; --iv3:#6A6258;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--iv);font-family:var(--fb);
+  line-height:1.65;overflow-x:hidden;cursor:none;transition:background .4s,color .4s;}
+@media(pointer:coarse){body{cursor:auto;}}
+input,button,a{cursor:none;}
+@media(pointer:coarse){input,button,a{cursor:auto;}}
+input{cursor:text;}
+
+/*═══ CURSOR ═══*/
+#cd{position:fixed;width:7px;height:7px;background:var(--red);border-radius:50%;
+  pointer-events:none;z-index:99999;transform:translate(-50%,-50%);
+  transition:width .15s,height .15s,background .2s;}
+#cr{position:fixed;width:30px;height:30px;border:1px solid rgba(196,43,43,.4);
+  border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);
+  transition:transform .12s var(--spring);}
+#cd.xl{width:42px;height:42px;background:rgba(196,43,43,.14);}
+@media(pointer:coarse){#cd,#cr{display:none;}}
+
+/*═══ GRAIN ═══*/
+#grain{position:fixed;inset:0;pointer-events:none;z-index:7000;opacity:.34;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+  animation:gS 7s steps(7) infinite;}
+@keyframes gS{0%{transform:translate(0)}14%{transform:translate(-2%,-1%)}28%{transform:translate(1%,2%)}42%{transform:translate(-1%,1%)}57%{transform:translate(2%,-2%)}71%{transform:translate(-2%,2%)}85%{transform:translate(1%,-1%)}100%{transform:translate(0)}}
+
+/*═══ BACKDROP ═══*/
+.bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 45% 55% at 82% 30%,rgba(196,43,43,.11) 0%,transparent 60%),
+    radial-gradient(ellipse 34% 44% at 8% 82%,rgba(212,152,90,.07) 0%,transparent 54%),
+    var(--bg);}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(196,43,43,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(196,43,43,.028) 1px,transparent 1px);
+  background-size:64px 64px;animation:gridDrift 22s linear infinite;}
+@keyframes gridDrift{from{background-position:0 0}to{background-position:64px 64px}}
+
+/*═══ NAV ═══*/
+nav{position:sticky;top:0;z-index:500;
+  background:rgba(12,12,11,.82);backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--b4);
+  padding:0 clamp(20px,5vw,40px);display:flex;align-items:center;height:54px;}
+[data-theme="light"] nav{background:rgba(245,240,232,.9);}
+.nlogo{font-family:var(--fa);font-size:17px;letter-spacing:3px;color:var(--iv);text-decoration:none;}
+.nlogo .dot{color:var(--red);}
+.nright{margin-left:auto;display:flex;align-items:center;gap:16px;}
+.nhandle{font-family:var(--fm);font-size:10px;letter-spacing:2px;color:var(--iv3);text-decoration:none;
+  text-transform:uppercase;transition:color .2s;}
+.nhandle:hover{color:var(--red);}
+.nbtn{font-family:var(--fm);font-size:9px;letter-spacing:2px;background:var(--b3);
+  border:1px solid var(--b4);color:var(--iv2);padding:6px 12px;border-radius:2px;
+  transition:background .2s,color .2s;text-transform:uppercase;}
+.nbtn:hover{background:var(--b4);color:var(--iv);}
+
+/*═══ LAYOUT ═══*/
+.W{max-width:1160px;margin:0 auto;padding:0 clamp(20px,5vw,40px);position:relative;z-index:2;}
+.sn{font-family:var(--fm);font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+.sn::after{content:'';flex:1;max-width:36px;height:1px;background:var(--red);}
+
+/*═══ HERO ═══*/
+.hero{min-height:calc(100vh - 54px);display:flex;align-items:center;
+  padding:60px 0;position:relative;}
+.hgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(30px,5vw,64px);
+  align-items:center;width:100%;}
+@media(max-width:860px){.hgrid{grid-template-columns:1fr;gap:44px;}}
+
+.h-ey{font-family:var(--fm);font-size:10px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--red);margin-bottom:22px;display:flex;align-items:center;gap:14px;}
+.h-eyline{width:32px;height:1px;background:var(--red);}
+.h-name{font-family:var(--fa);font-size:clamp(46px,7.4vw,92px);line-height:.9;
+  letter-spacing:1px;color:var(--iv);text-transform:uppercase;}
+.h-name .red{color:var(--red);}
+.h-serif{font-family:var(--fe);font-style:italic;font-size:clamp(18px,2.6vw,30px);
+  color:var(--warm);letter-spacing:.5px;margin-top:14px;}
+.h-rule{width:280px;max-width:70%;height:1px;
+  background:linear-gradient(90deg,var(--red),var(--warm),transparent);margin:26px 0;}
+.h-desc{font-family:var(--fb);font-size:15px;color:var(--iv2);max-width:480px;line-height:1.9;}
+.h-desc b{color:var(--iv);font-weight:600;}
+
+/*═══ FORM ═══*/
+.form-w{margin-top:32px;max-width:480px;}
+.field-row{display:flex;gap:10px;flex-wrap:wrap;}
+.email-in{flex:1;min-width:220px;font-family:var(--fm);font-size:13px;letter-spacing:1px;
+  background:var(--b2);border:1px solid var(--b4);color:var(--iv);
+  padding:15px 16px;border-radius:3px;transition:border-color .2s,background .2s;}
+.email-in::placeholder{color:var(--iv3);}
+.email-in:focus{outline:none;border-color:var(--red);background:var(--b3);}
+.cta{font-family:var(--fm);font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  background:var(--red);border:1px solid var(--red);color:#F5F0E8;
+  padding:15px 24px;border-radius:3px;white-space:nowrap;
+  transition:background .2s,transform .18s var(--spring),box-shadow .2s;}
+.cta:hover{background:var(--red2);transform:translateY(-2px);box-shadow:0 10px 30px rgba(196,43,43,.28);}
+.cta:active{transform:translateY(0);}
+.cta:disabled{opacity:.55;transform:none;box-shadow:none;}
+.micro{font-family:var(--fm);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--iv3);margin-top:12px;display:flex;align-items:center;gap:8px;}
+.micro::before{content:'✓';color:var(--pl);}
+.err{font-family:var(--fm);font-size:10px;letter-spacing:1px;color:var(--red2);margin-top:10px;min-height:14px;}
+
+/* success state */
+.success{display:none;margin-top:32px;max-width:480px;background:var(--b2);
+  border:1px solid var(--b4);border-left:3px solid var(--pl);border-radius:3px;padding:26px 26px;}
+.success.on{display:block;animation:pop .5s var(--spring);}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.success .sh{font-family:var(--fa);font-size:26px;letter-spacing:1px;color:var(--iv);margin-bottom:8px;}
+.success .sh span{color:var(--pl);}
+.success p{font-family:var(--fb);font-size:13.5px;color:var(--iv2);line-height:1.75;}
+
+/*═══ STATS ═══*/
+.h-stats{display:flex;gap:34px;margin-top:38px;flex-wrap:wrap;}
+.hs-val{font-family:var(--fa);font-size:30px;color:var(--iv);line-height:1;}
+.hs-val span{color:var(--red);}
+.hs-lbl{font-family:var(--fm);font-size:8.5px;letter-spacing:2px;color:var(--iv3);
+  text-transform:uppercase;margin-top:4px;}
+
+/*═══ PLAYBOOK CARD (right) ═══*/
+.pbcard{position:relative;background:linear-gradient(160deg,#130C0A,#0A0806);
+  border:1px solid var(--b4);border-radius:6px;padding:34px 30px;overflow:hidden;
+  box-shadow:0 34px 80px rgba(0,0,0,.6);transition:transform .3s var(--spring);}
+.pbcard:hover{transform:translateY(-5px);}
+.pbcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red),transparent);}
+.pbcard .glow{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 65% 65% at 26% 20%,rgba(196,43,43,.16) 0%,transparent 56%);}
+.pb-tag{position:relative;font-family:var(--fm);font-size:8px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--warm);margin-bottom:14px;}
+.pb-title{position:relative;font-family:var(--fa);font-size:clamp(30px,4vw,44px);line-height:.9;
+  color:#F5F0E8;letter-spacing:.5px;}
+.pb-title span{color:var(--red);}
+.pb-sub{position:relative;font-family:var(--fe);font-style:italic;font-size:14px;
+  color:var(--warm);margin-top:10px;margin-bottom:22px;}
+.pb-list{position:relative;list-style:none;display:grid;gap:11px;}
+.pb-list li{display:flex;align-items:flex-start;gap:11px;
+  font-family:var(--fb);font-size:12.5px;color:var(--iv2);line-height:1.5;}
+.pb-num{font-family:var(--fm);font-size:9px;font-weight:700;color:var(--red);
+  border:1px solid rgba(196,43,43,.4);border-radius:2px;padding:2px 6px;flex-shrink:0;margin-top:1px;}
+.pb-foot{position:relative;margin-top:22px;padding-top:16px;border-top:1px solid var(--b4);
+  font-family:var(--fm);font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--iv3);}
+
+/*═══ PILLAR TAGS ═══*/
+.h-tags{display:flex;gap:9px;flex-wrap:wrap;margin-top:26px;}
+.ptag{padding:6px 13px;border:1px solid;border-radius:2px;
+  font-family:var(--fm);font-size:8.5px;letter-spacing:3px;text-transform:uppercase;
+  transition:transform .2s var(--spring);}
+.ptag:hover{transform:translateY(-3px);}
+.ptag.t{color:var(--pt);border-color:var(--pt);background:rgba(74,127,165,.06);}
+.ptag.m{color:var(--pm);border-color:var(--pm);background:rgba(196,135,90,.06);}
+.ptag.p{color:var(--pp);border-color:var(--pp);background:rgba(196,43,43,.06);}
+
+/*═══ INSIDE SECTION ═══*/
+section.inside{padding:100px 0;border-top:1px solid var(--b3);position:relative;}
+.st{font-family:var(--fa);font-size:clamp(34px,5vw,58px);color:var(--iv);line-height:.9;letter-spacing:1px;}
+.ss{font-family:var(--fh);font-size:clamp(15px,2vw,22px);letter-spacing:5px;color:var(--iv3);margin-top:8px;}
+.in-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:54px;}
+@media(max-width:760px){.in-grid{grid-template-columns:1fr;}}
+.in-c{background:var(--b2);border:1px solid var(--b4);border-radius:3px;padding:28px 24px;
+  transition:transform .2s var(--spring),border-color .2s;}
+.in-c:hover{transform:translateY(-4px);border-color:var(--b5);}
+.in-c .ic-e{font-family:var(--fm);font-size:8.5px;letter-spacing:3px;color:var(--red);margin-bottom:12px;}
+.in-c h3{font-family:var(--fh);font-size:24px;letter-spacing:2px;color:var(--iv);margin-bottom:10px;}
+.in-c p{font-family:var(--fb);font-size:13px;color:var(--iv2);line-height:1.7;}
+
+/*═══ WHO / ABOUT strip ═══*/
+.about{margin-top:60px;background:var(--b2);border:1px solid var(--b4);border-left:3px solid var(--red);
+  border-radius:3px;padding:34px clamp(24px,4vw,44px);display:flex;gap:30px;align-items:center;flex-wrap:wrap;}
+.about .who{flex:1;min-width:280px;}
+.about .who .lbl{font-family:var(--fm);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+.about .who p{font-family:var(--fb);font-size:14px;color:var(--iv2);line-height:1.8;}
+.about .who b{color:var(--iv);font-weight:600;}
+.about .sig{font-family:var(--fe);font-style:italic;font-size:22px;color:var(--warm);}
+
+/*═══ FOOTER ═══*/
+footer{padding:80px 0;text-align:center;border-top:1px solid var(--b3);position:relative;z-index:2;}
+.ft-n{font-family:var(--fa);font-size:clamp(38px,7vw,80px);letter-spacing:2px;color:var(--iv);line-height:.88;}
+.ft-n span{color:var(--red);}
+.ft-su{font-family:var(--fh);font-size:clamp(12px,2vw,18px);letter-spacing:7px;color:var(--iv3);margin-top:8px;}
+.ft-r{width:2px;height:38px;background:linear-gradient(var(--red),transparent);margin:24px auto;}
+.ft-v{font-family:var(--fm);font-size:8.5px;letter-spacing:3px;color:var(--b5);}
+
+/*═══ REVEAL ═══*/
+.rv{opacity:0;transform:translateY(22px);transition:opacity .72s var(--spring),transform .72s var(--spring);}
+.rv.in{opacity:1;transform:translateY(0);}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;}#grain,.bg-grid{animation:none;}}
+</style>
+</head>
+<body>
+<div id="cd"></div><div id="cr"></div>
+<div id="grain"></div>
+<div class="bg-glow"></div>
+<div class="bg-grid"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nlogo">MELLO<span class="dot">.</span></a>
+  <div class="nright">
+    <a href="https://www.threads.com/@romellotcp" target="_blank" rel="noopener" class="nhandle">@romellotcp</a>
+    <button class="nbtn" onclick="toggleTheme()" id="themeBtn">☾ DARK</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="W">
+<div class="hero">
+  <div class="hgrid">
+    <!-- LEFT -->
+    <div class="rv in">
+      <div class="h-ey"><span class="h-eyline"></span>The 9-to-5 Builder · Detroit</div>
+      <h1 class="h-name">YOU DON'T HAVE<br>TO QUIT TO<br><span class="red">BUILD.</span></h1>
+      <div class="h-serif">I've shipped 25+ apps around a full-time job.</div>
+      <div class="h-rule"></div>
+      <p class="h-desc">Get <b>The Weekend-Ship Playbook</b> — the exact process I use to take an idea to a live app between Friday night and Sunday. Then I'll send you my build log: what I ship, what breaks, what it teaches me. No fluff.</p>
+
+      <!-- FORM -->
+      <form class="form-w" id="capture" novalidate>
+        <div class="field-row">
+          <input class="email-in" id="email" type="email" name="email" placeholder="you@email.com" autocomplete="email" required/>
+          <button class="cta" type="submit" id="submitBtn">Send me the playbook →</button>
+        </div>
+        <div class="err" id="err"></div>
+        <div class="micro">No spam. Just the playbook + the build log. Unsubscribe anytime.</div>
+      </form>
+
+      <!-- SUCCESS -->
+      <div class="success" id="success">
+        <div class="sh">You're <span>in.</span></div>
+        <p>Check your inbox — the Weekend-Ship Playbook is on the way. If it's not there in a minute, peek in spam and drag it to your primary. Now go make the embarrassing version. 🛠️</p>
+      </div>
+
+      <div class="h-stats">
+        <div><div class="hs-val">25<span>+</span></div><div class="hs-lbl">Apps shipped</div></div>
+        <div><div class="hs-val">1</div><div class="hs-lbl">Full-time job</div></div>
+        <div><div class="hs-val">0</div><div class="hs-lbl">Days I quit it</div></div>
+      </div>
+
+      <div class="h-tags">
+        <span class="ptag t">Build</span>
+        <span class="ptag m">Ship</span>
+        <span class="ptag p">Repeat</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: playbook card -->
+    <div class="rv in">
+      <div class="pbcard">
+        <div class="glow"></div>
+        <div class="pb-tag">Free · PDF + Checklist</div>
+        <div class="pb-title">THE WEEKEND-<br><span>SHIP</span> PLAYBOOK</div>
+        <div class="pb-sub">Idea to live app, Friday to Sunday.</div>
+        <ul class="pb-list">
+          <li><span class="pb-num">01</span>Shrink the idea till it's embarrassing</li>
+          <li><span class="pb-num">02</span>Define "done" in one sentence</li>
+          <li><span class="pb-num">03</span>Build the ugly core — no login, no styling</li>
+          <li><span class="pb-num">04</span>Use it yourself before anyone else</li>
+          <li><span class="pb-num">05</span>Ship where one real person can see it</li>
+        </ul>
+        <div class="pb-foot">7 steps · read it in 4 minutes · steal all of it</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- INSIDE -->
+<section class="inside">
+  <div class="W">
+    <div class="sn">What you get</div>
+    <h2 class="st">MORE THAN A FREEBIE</h2>
+    <div class="ss">IT'S HOW I ACTUALLY BUILD</div>
+    <div class="in-grid">
+      <div class="in-c rv">
+        <div class="ic-e">01 — THE PLAYBOOK</div>
+        <h3>The Weekend-Ship System</h3>
+        <p>The 7-step process, plus a one-page checklist. The same one I used to ship a casino, a radio station, a trading bot, and 20+ more — all after work.</p>
+      </div>
+      <div class="in-c rv">
+        <div class="ic-e">02 — THE BUILD LOG</div>
+        <h3>What I'm Shipping</h3>
+        <p>A short, honest email when I build something. The wins, the bugs that ate my weekend, the real numbers. No 5,000-word "value bombs."</p>
+      </div>
+      <div class="in-c rv">
+        <div class="ic-e">03 — THE TOOLS</div>
+        <h3>Stuff You Can Use</h3>
+        <p>Now and then I make something you'll actually want — an app, a template, a tool. You'll hear about it here first, before anywhere else.</p>
+      </div>
+    </div>
+
+    <div class="about rv">
+      <div class="who">
+        <div class="lbl">Who this is for</div>
+        <p>You've got a real job and a notes app full of ideas you keep not starting. You don't need to quit, become a genius, or wait for the perfect moment. <b>You need a Saturday and a system.</b> That's the whole thing.</p>
+      </div>
+      <div class="sig">— Mello</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="W">
+    <div class="ft-n">ROMELLO <span>MORRIS</span></div>
+    <div class="ft-su">THE 9-TO-5 BUILDER</div>
+    <div class="ft-r"></div>
+    <div class="ft-v">DETROIT · BUILT AFTER 5PM · v1.0</div>
+  </div>
+</footer>
+
+<script>
+/* ── config: point this at your subscribe endpoint (Vercel fn -> beehiiv). "" = demo mode ── */
+const SUBSCRIBE_ENDPOINT = "/api/subscribe";
+
+/* ── custom cursor ── */
+const cd=document.getElementById('cd'), cr=document.getElementById('cr');
+if(cd && matchMedia('(pointer:fine)').matches){
+  let x=0,y=0,rx=0,ry=0;
+  addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;cd.style.left=x+'px';cd.style.top=y+'px';});
+  (function loop(){rx+=(x-rx)*.18;ry+=(y-ry)*.18;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button,input,.pbcard,.in-c').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cd.classList.add('xl'));
+    el.addEventListener('mouseleave',()=>cd.classList.remove('xl'));
+  });
+}
+
+/* ── theme toggle ── */
+function toggleTheme(){
+  const h=document.documentElement, btn=document.getElementById('themeBtn');
+  const light = h.getAttribute('data-theme')==='light';
+  h.setAttribute('data-theme', light?'dark':'light');
+  btn.textContent = light?'☾ DARK':'☀ LIGHT';
+}
+
+/* ── reveal on scroll ── */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.14});
+document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));
+
+/* ── form submit ── */
+const form=document.getElementById('capture'), success=document.getElementById('success'),
+      emailIn=document.getElementById('email'), errEl=document.getElementById('err'),
+      btn=document.getElementById('submitBtn');
+form.addEventListener('submit', async e=>{
+  e.preventDefault();
+  errEl.textContent='';
+  const email=emailIn.value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ errEl.textContent='Enter a valid email.'; return; }
+  btn.disabled=true; btn.textContent='Sending…';
+  try{
+    if(SUBSCRIBE_ENDPOINT){
+      const r=await fetch(SUBSCRIBE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+      if(!r.ok) throw new Error('bad');
+    } else {
+      await new Promise(r=>setTimeout(r,600)); // demo mode
+    }
+    form.style.display='none';
+    success.classList.add('on');
+  }catch(_){
+    errEl.textContent='Something broke on my end. Try again in a sec.';
+    btn.disabled=false; btn.textContent='Send me the playbook →';
+  }
+});
+</script>
+</body>
+</html>
