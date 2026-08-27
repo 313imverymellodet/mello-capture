@@ -54,7 +54,8 @@ export default async function handler(req, res) {
     if (!r.ok) {
       const detail = await r.text();
       console.error("resend email error", r.status, detail);
-      return res.status(502).json({ error: "Could not send welcome" });
+      // TEMP DIAGNOSTIC: surface upstream error to diagnose. Revert after fixing.
+      return res.status(502).json({ error: "Could not send welcome", status: r.status, detail });
     }
 
     return res.status(200).json({ ok: true });
