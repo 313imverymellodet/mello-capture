@@ -1,0 +1,18 @@
+# Weekend-Ship Playbook
+
+> Free playbook from Romello "Mello" Morris, the 9-to-5 Builder in Detroit, on how to ship an app in a weekend around a full-time job.
+
+This site is one landing page at https://build.learnwithmello.com/. Visitors can request The Weekend-Ship Playbook by email, or download the Brag Book (Excel, Word, or PDF) with no email. Files under /downloads/ send `X-Robots-Tag: noindex` so they stay out of search results.
+
+Romello Morris publishes as Mello. The only profile linked on this site is Threads: https://www.threads.com/@romellotcp
+
+## Pages
+
+- [The Weekend-Ship Playbook](https://build.learnwithmello.com/): Landing page. Offer is the 7-step weekend shipping process, a short build-log email, and occasional tools. The page states 25+ apps shipped around one full-time job.
+
+## Optional
+
+- [Romello Morris on Threads](https://www.threads.com/@romellotcp): Profile linked in the page navigation (@romellotcp).
+- [Brag Book, Excel](https://build.learnwithmello.com/downloads/brag-book.xlsx): Eight-tab career win tracker. Free download, no email. noindex.
+- [Brag Book, Word](https://build.learnwithmello.com/downloads/brag-book.docx): Fill-in-the-blanks document. Free download, no email. noindex.
+- [Brag Book, PDF](https://build.learnwithmello.com/downloads/brag-book.pdf): Printable reference. Free download, no email. noindex.
